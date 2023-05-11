@@ -3,20 +3,26 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import '../App.css'
 import ContactList from './ContactList';
 import AddContactForm from './AddContactForm';
-import ContactDetails from './ContactDetails';
 import EditContactForm from './EditContactForm';
 import Charts from './Charts';
 
 const Dashboard: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+//   creating a reference for the sidebar using the useRef hook
   const sidebarRef = useRef<HTMLElement | null>(null);
+
+//   accessing the current location using the useLocation hook from react-router-dom to use in further condition
   const location = useLocation()
+
+//   defining a click event handler to handle clicks outside the sidebar to close the sidebar
   const handleClickOutside = (event: React.MouseEvent<HTMLElement>) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
       setIsSidebarOpen(false);
     }
   };
 
+//   effect for event listener on every mouse-click
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside as unknown as EventListener
     );
@@ -38,7 +44,7 @@ const Dashboard: React.FC = () => {
 </button>
 <div className='w-full flex items-center justify-center max-[768px]:-ml-10 ml-56 text-2xl font-medium text-slate-50'>{location.pathname.startsWith('/charts')?'Charts and Maps':'Contact Page'}</div>
 </div>
-
+{/* render UI for sidebar nav */}
 <aside ref={sidebarRef} id="default-sidebar" className={`fixed min-[768px]:top-14 top-0 left-0 z-40 w-64 h-screen transition-transform translate-x-0 ${isSidebarOpen?'translate-x-0 ':'max-[768px]:-translate-x-full'}`} aria-label="Sidebar">
    <div className="h-full px-3 py-4 overflow-y-auto bg-slate-100 ">
       <ul className="space-y-2 font-medium">
@@ -57,19 +63,18 @@ const Dashboard: React.FC = () => {
       </ul>
    </div>
 </aside>
-
+{/* main component where all the components/pages will load */}
 <main className="p-4 max-[768px]:ml-0 ml-64 items-center flex flex-col pt-20">
-      
+      {/* defining routes to use them inside this main container */}
    <Routes>
           <Route path="/" element={<ContactList />} />
           <Route path="add" element={<AddContactForm />} />
-          <Route path=":id" element={<ContactDetails />} />
           <Route path="edit/:id" element={<EditContactForm />} />
           <Route path="charts" element={<Charts />} />
   </Routes>
 </main>
 
-
+{/* backdrop when sidebar is opened on mobile devices */}
 {isSidebarOpen?<div drawer-backdrop="" className="max-[768px]:bg-gray-900 max-[768px]:bg-opacity-50  max-[768px]:fixed max-[768px]:inset-0 max-[768px]:z-30"></div>:null}
 </div>
   );

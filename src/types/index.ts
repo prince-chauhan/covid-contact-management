@@ -1,5 +1,6 @@
+// exporting structure of Contact
 export interface Contact {
-  id: number;
+  id: number; 
   firstName: string;
   lastName: string;
   status: string;
