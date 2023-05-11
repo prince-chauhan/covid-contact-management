@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
 </div>
 {/* render UI for sidebar nav */}
 <aside ref={sidebarRef} id="default-sidebar" className={`fixed min-[768px]:top-14 top-0 left-0 z-40 w-64 h-screen transition-transform translate-x-0 ${isSidebarOpen?'translate-x-0 ':'max-[768px]:-translate-x-full'}`} aria-label="Sidebar">
-  
+
    <div className="h-full px-3 py-4 overflow-y-auto bg-slate-100 ">
       <ul className="space-y-2 font-medium">
          <li>
@@ -65,7 +65,7 @@ const Dashboard: React.FC = () => {
    </div>
 </aside>
 {/* main component where all the components/pages will load */}
-<main className="p-4 max-[768px]:ml-0 ml-64 items-center flex flex-col pt-20">
+<main className="p-4 max-[768px]:ml-0 ml-64 items-center flex flex-col pt-20 h-full justify-center">
       {/* defining routes to use them inside this main container */}
    <Routes>
           <Route path="/" element={<ContactList />} />
