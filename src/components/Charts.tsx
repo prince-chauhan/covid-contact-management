@@ -160,25 +160,25 @@ const Charts: React.FC = () => {
     <div className='w-full'>
       
       <div className="grid lg:grid-cols-4 max-[1024px]:grid-cols-2 gap-4 mb-4">          
-        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
+        <div className="max-w-sm p-6 bg-purple-200 border border-gray-200 rounded-lg shadow">
           <h1 className='text-lg font-bold'>Todays Cases</h1>
           <h2 className='text-md font-medium'>{worldData?.todayCases?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</h2>
           <h2 className='text-sm font-medium'>from {worldData?.affectedCountries} countries</h2>
           <span className=' text-xs font-thin'>as of {new Date(worldData?.updated).toUTCString()}</span>
         </div>
-        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
+        <div className="max-w-sm p-6 bg-blue-200 border border-gray-200 rounded-lg shadow">
           <h1 className='text-lg font-bold'>Active Cases</h1>
           <h2 className='text-md font-medium'>{worldData?.active?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} active cases</h2>
           <h2 className='text-sm font-medium'>{worldData?.activePerOneMillion?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} per 1M</h2>
           <span className=' text-xs font-thin'>{worldData?.population?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} total population</span>
         </div>
-        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
+        <div className="max-w-sm p-6 bg-green-200 border border-gray-200 rounded-lg shadow">
           <h1 className='text-lg font-bold'>Recovery</h1>
           <h2 className='text-md font-medium'>{worldData?.todayRecovered?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} today</h2>
           <h2 className='text-sm font-medium'>{worldData?.recoveredPerOneMillion?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} per 1M</h2>
           <span className=' text-xs font-thin'>{worldData?.recovered?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} total recovered</span>
         </div>
-        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
+        <div className="max-w-sm p-6 bg-red-200 border border-gray-200 rounded-lg shadow">
           <h1 className='text-lg font-bold'>Deaths</h1>
           <h2 className='text-md font-medium'>{worldData?.todayDeaths?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} today</h2>
           <h2 className='text-sm font-medium'>{worldData?.deathsPerOneMillion?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} per 1M</h2>
