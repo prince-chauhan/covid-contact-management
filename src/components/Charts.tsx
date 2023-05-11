@@ -7,11 +7,9 @@ import L from "leaflet";
 
 L.Marker.prototype.options.icon = L.icon({
   iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+  iconSize: [15, 25]
 });
 const center = { lat: 59.433421, lng: 24.75224 };
-const Map = () =>{
-  const [data, setData] = useState<{ countryName: string, position:{lat: number, long:number}, active:number, deaths: number, recovered:number, flag:string  }[]>([]);
-  
   function convert(num:number) {
     if (num >= 1000000000) {
       return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';  
@@ -27,6 +25,9 @@ const Map = () =>{
     
     return num;
   }
+const Map = () =>{
+  const [data, setData] = useState<{ countryName: string, position:{lat: number, long:number}, active:number, deaths: number, recovered:number, flag:string  }[]>([]);
+  
   useEffect(() => {
     const fetchData = async () => {
       let result: {
@@ -60,14 +61,14 @@ const Map = () =>{
     <MapContainer
     center={center}
     style={{width:'100%', height:'100%', zIndex:1}}
-    zoom={2} scrollWheelZoom={false}
+    zoom={4} scrollWheelZoom={false}
 >
     <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
     />
     {data.map((country)=>(
-    <Marker position={[ country.position.lat, country.position.long]}>
+    <Marker position={[ country.position.lat, country.position.long]} key={country.countryName}>
         <Popup>
             <div className='flex'><strong>{country.countryName}</strong> <img src={country.flag} alt='flag' className='ml-2 w-6'/></div> <br /> Active: {convert(country.active)} <br /> Deaths: {convert(country.deaths)} <br /> Recovered: {convert(country.recovered)}
         </Popup>
@@ -89,6 +90,23 @@ const Map = () =>{
 </div>
 
   )
+}
+function timestampToTime(timestamp:number) {
+  let date = new Date(timestamp);
+  
+  let months = ['January', 'February', 'March', 
+                'April', 'May', 'June', 
+                'July', 'August', 'September',
+                'October', 'November', 'December'];
+                
+  let hours = date.getHours();  
+  let minutes = "0" + date.getMinutes();  
+  
+  let month = months[date.getMonth()];  
+  let day = date.getDate();  
+  let year = date.getFullYear();
+  
+  return `${hours}:${minutes.substr(-2)} ${day} ${month} ${year}`  
 }
 const Charts: React.FC = () => {
   const [data, setData] = useState<{ date: string, cases: number, deaths:number }[]>([]);
@@ -119,48 +137,68 @@ const Charts: React.FC = () => {
 
     fetchData();
   }, []);
-     const position = [51.505, -0.09]
+  const [worldData, setWorldData] = useState<any>({});
+  useEffect(() => {
+    const fetchData = async () => {
+      fetch('https://disease.sh/v3/covid-19/all')
+      .then(res => res.json())
+      .then(data => {
+      setWorldData(data);
+      console.log(data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+    };
+
+    fetchData();
+  }, []);
 
   return (
     
-    <div className='w-full '>
-
-    <div className='items-center justify-evenly grid-cols-1 grid mb-10'>      
-    <div className='p-6 bg-white border border-gray-200 rounded-lg shadow h-112 overflow-x-hidden'>
-     <h4 className='text-center font-medium mb-6'>Total cases till now</h4>
-     <div className=' h-80'>
-      <Map/>
-     </div>
-    </div>
-    </div>
-    <h2 className='text-center font-bold text-lg mb-6'>Historic data charts</h2>
-    {/* <div className='items-center justify-evenly lg:grid-cols-2 grid-cols-1 gap-2 grid'>      
-      <div className='p-6 bg-white border border-gray-200 rounded-lg shadow h-80 max-h-96 pb-20'>
-      <h4 className='text-center font-medium mb-6'>Total cases till now</h4>
-        <ResponsiveContainer>
-          <LineChart
-            data={data}
-            syncId="anyId"
-            margin={{
-              top: 10,
-              right: 30,
-              left: 0,
-              bottom: 0,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Line type="monotone" dataKey="cases" stroke="#8884d8" activeDot={{ r: 8 }} />
-          </LineChart>
-        </ResponsiveContainer>
+    <div className='w-full'>
+      
+      <div className="grid lg:grid-cols-4 max-[1024px]:grid-cols-2 gap-4 mb-4">          
+        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
+          <h1 className='text-lg font-bold'>Todays Cases</h1>
+          <h2 className='text-md font-medium'>{worldData?.todayCases?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</h2>
+          <h2 className='text-sm font-medium'>from {worldData?.affectedCountries} countries</h2>
+          <span className=' text-xs font-thin'>as of {new Date(worldData?.updated).toUTCString()}</span>
+        </div>
+        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
+          <h1 className='text-lg font-bold'>Active Cases</h1>
+          <h2 className='text-md font-medium'>{worldData?.active?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} active cases</h2>
+          <h2 className='text-sm font-medium'>{worldData?.activePerOneMillion?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} per 1M</h2>
+          <span className=' text-xs font-thin'>{worldData?.population?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} total population</span>
+        </div>
+        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
+          <h1 className='text-lg font-bold'>Recovery</h1>
+          <h2 className='text-md font-medium'>{worldData?.todayRecovered?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} today</h2>
+          <h2 className='text-sm font-medium'>{worldData?.recoveredPerOneMillion?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} per 1M</h2>
+          <span className=' text-xs font-thin'>{worldData?.recovered?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} total recovered</span>
+        </div>
+        <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow">
+          <h1 className='text-lg font-bold'>Deaths</h1>
+          <h2 className='text-md font-medium'>{worldData?.todayDeaths?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} today</h2>
+          <h2 className='text-sm font-medium'>{worldData?.deathsPerOneMillion?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} per 1M</h2>
+          <span className=' text-xs font-thin'>{worldData?.deaths?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")} total deaths</span>
+        </div>
       </div>
-
-      <div className='p-6 bg-white border border-gray-200 rounded-lg shadow h-80 max-h-96'>
-      <h4 className='text-center font-medium mb-6'>Total deaths till now</h4>
-      <ResponsiveContainer width="100%" height={200}>
-            <AreaChart
+      <div className='items-center justify-evenly grid-cols-1 grid mb-10'>      
+        <div className='p-6 bg-white border border-gray-200 rounded-lg shadow h-114 overflow-x-hidden'>
+          <h4 className='text-center font-medium text-2xl mb-6'>Country Wise Data</h4>
+          <div className=' h-116 '>
+            <Map/>
+          </div>
+        </div>
+      </div>
+      <h2 className='text-center font-medium text-xl mb-6'>Historic chart data</h2>
+      <div className='items-center justify-evenly lg:grid-cols-2 grid-cols-1 gap-2 grid'>      
+        <div className='p-6 bg-white border border-gray-200 rounded-lg shadow h-80 max-h-96 pb-20'>
+        <h4 className='text-center font-medium mb-6'>Total cases till now</h4>
+          <ResponsiveContainer>
+            <LineChart
               data={data}
               syncId="anyId"
               margin={{
@@ -174,12 +212,34 @@ const Charts: React.FC = () => {
               <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />
-              <Area type="monotone" dataKey="deaths" stroke="#82ca9d" fill="#82ca9d" />
-              <Brush />
-            </AreaChart>
+              <Line type="monotone" dataKey="cases" stroke="#8884d8" activeDot={{ r: 8 }} />
+            </LineChart>
           </ResponsiveContainer>
-      </div>
-    </div>  */}
+        </div>
+
+        <div className='p-6 bg-white border border-gray-200 rounded-lg shadow h-80 max-h-96'>
+        <h4 className='text-center font-medium mb-6'>Total deaths till now</h4>
+        <ResponsiveContainer width="100%" height={200}>
+              <AreaChart
+                data={data}
+                syncId="anyId"
+                margin={{
+                  top: 10,
+                  right: 30,
+                  left: 0,
+                  bottom: 0,
+                }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Area type="monotone" dataKey="deaths" stroke="#82ca9d" fill="#82ca9d" />
+                <Brush />
+              </AreaChart>
+            </ResponsiveContainer>
+        </div>
+      </div> 
     </div> 
   );
 };
