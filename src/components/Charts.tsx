@@ -69,7 +69,7 @@ const Map = () =>{
     data.length?
     <MapContainer
     center={center}
-    style={{width:'100%', height:'100%', zIndex:1}}
+    style={{width:'100%', height:'100%', zIndex:0}}
     zoom={4} scrollWheelZoom={false}
 >
     <TileLayer
