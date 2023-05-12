@@ -200,7 +200,7 @@ const Charts: React.FC = () => {
 
       {/* render the "Historic chart data" section with two line charts displaying the total cases and total deaths over time */}
       <h2 className='text-center font-medium text-xl mb-6'>Historic chart data</h2>
-      <div className='items-center justify-evenly lg:grid-cols-2 grid-cols-1 gap-2 grid'>      
+      <div className='items-center justify-evenly lg:grid-cols-2 grid-cols-1 gap-2 grid mb-6'>      
         <div className='p-6 bg-white border border-gray-200 rounded-lg shadow h-80 max-h-96 pb-20'>
         <h4 className='text-center font-medium mb-6'>Total cases till now</h4>
         
