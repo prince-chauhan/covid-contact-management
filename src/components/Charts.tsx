@@ -161,7 +161,7 @@ const Charts: React.FC = () => {
     <div className='w-full h-full'>
       
       {/* render the four statistic cards for "Today's Cases," "Active Cases," "Recovery," and "Deaths" with their respective data retrieved from the worldData state variable */}
-      <div className="grid lg:grid-cols-4 max-[1024px]:grid-cols-2 gap-4 mb-4">          
+      <div className="grid lg:grid-cols-4 max-[1024px]:grid-cols-2 gap-4 mb-10">          
         <div className="max-w-sm p-6 bg-purple-200 border border-gray-200 rounded-lg shadow">
           <h1 className='text-lg font-bold'>Today's Cases</h1>
           <h2 className='text-md font-medium'>{worldData?.todayCases?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</h2>
