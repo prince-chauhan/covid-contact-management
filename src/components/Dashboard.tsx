@@ -34,7 +34,7 @@ const Dashboard: React.FC = () => {
     <div className='h-full'>
       
       
-<div className='w-full flex bg-blue-500 min-[768px]:z-50 z-10 fixed pt-2 pb-2 min-[769px]:pt-3 min-[769px]:pb-3'>
+<div className='w-full flex bg-blue-700 min-[768px]:z-50 z-10 fixed pt-2 pb-2 min-[769px]:pt-3 min-[769px]:pb-3'>
 
 <button data-drawer-target="default-sidebar" onClick={()=>setIsSidebarOpen((!isSidebarOpen))} data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className=" inline-flex items-center p-2 mt-2 ml-3 text-sm text-slate-50 rounded-lg sm,md:hidden hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 max-[768px]:z-50 min-[769px]:hidden">
    <span className="sr-only">Open sidebar</span>

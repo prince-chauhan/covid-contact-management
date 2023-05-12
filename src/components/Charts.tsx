@@ -158,7 +158,7 @@ const Charts: React.FC = () => {
 
   return (
     
-    <div className='w-full'>
+    <div className='w-full h-full'>
       
       {/* render the four statistic cards for "Today's Cases," "Active Cases," "Recovery," and "Deaths" with their respective data retrieved from the worldData state variable */}
       <div className="grid lg:grid-cols-4 max-[1024px]:grid-cols-2 gap-4 mb-4">          
